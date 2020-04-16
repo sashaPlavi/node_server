@@ -19,7 +19,7 @@ exports.signin = function (req, res, next) {
   // user has email and password auth'd
   //giving them a tocken
   //password is giving us a user from passport functions in req.user
-  console.log(req);
+  // console.log(req);
 
   res.send({ token: tokenForUser(req.user) });
 };
