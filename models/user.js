@@ -11,7 +11,7 @@ const userSchema = new Schema({
 //on save encrypt pass
 userSchema.pre("save", function (next) {
   const user = this;
-  console.log(this);
+  //console.log(this);
 
   //generate salt and than run collback
   bcrypt.genSalt(10, (err, salt) => {
@@ -19,7 +19,7 @@ userSchema.pre("save", function (next) {
       return next(err);
     }
     //hash password using salt
-    console.log(user.password);
+    // console.log(user.password);
 
     bcrypt.hash(user.password, salt, (err, hash) => {
       if (err) {
@@ -30,6 +30,15 @@ userSchema.pre("save", function (next) {
     });
   });
 });
+
+userSchema.methods.comparePassword = function (candidatePassword, callback) {
+  bcrypt.compare(candidatePassword, this.password, function (err, isMach) {
+    if (err) {
+      return callback(err);
+    }
+    return callback(null, isMach);
+  });
+};
 
 //create model class
 

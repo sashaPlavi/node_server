@@ -1,4 +1,28 @@
 const User = require("../models/user");
+const jwt = require("jwt-simple");
+const config = require("../config");
+
+function tokenForUser(user) {
+  const timeStamp = new Date().getTime();
+
+  const payload = {
+    sub: user.id,
+    iat: timeStamp,
+  };
+  const token = jwt.encode(payload, config.secret);
+  //console.log(token);
+
+  return token;
+}
+
+exports.signin = function (req, res, next) {
+  // user has email and password auth'd
+  //giving them a tocken
+  //password is giving us a user from passport functions in req.user
+  console.log(req);
+
+  res.send({ token: tokenForUser(req.user) });
+};
 
 exports.signup = (req, res, next) => {
   const email = req.body.email;
@@ -29,7 +53,7 @@ exports.signup = (req, res, next) => {
         return next(err);
       }
       //send responce
-      res.json({ success: true });
+      res.json({ token: tokenForUser(user) });
     });
   });
 };
